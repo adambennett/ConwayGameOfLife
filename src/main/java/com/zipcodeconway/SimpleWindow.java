@@ -2,11 +2,14 @@ package com.zipcodeconway;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SimpleWindow {
     static JPanel panel;
     static JFrame frame;
     private Integer dim = 0;
+    ArrayList<Color> colors = new ArrayList<>();
 
     public SimpleWindow(Integer dimension) {
         this.dim = dimension * 10;
@@ -19,6 +22,14 @@ public class SimpleWindow {
         Container contentPane = frame.getContentPane();
         contentPane.add(panel);
         frame.setVisible(true);
+        colors = new ArrayList<>();
+        while (colors.size() < 4) {
+            Color toAdd = getRandomColor();
+            while (colors.contains(toAdd)) {
+                toAdd = getRandomColor();
+            }
+            colors.add(toAdd);
+        }
     }
 
     public void sleep(Integer millisecs) {
@@ -43,11 +54,59 @@ public class SimpleWindow {
                     g.fillRect(i * BOX_DIM, j * BOX_DIM, 10, 10);
                 }
                 if (array[i][j] == 1) {
-                    g.setColor(Color.BLACK);
+                    g.setColor(getDisplayColor());
                     g.fillRect(i * BOX_DIM, j * BOX_DIM, 10, 10);
                 }
             }
         }
 
+    }
+
+    private Color getDisplayColor() {
+        if (colors.size() > 3) {
+            int roll = ThreadLocalRandom.current().nextInt(0, 4);
+            switch (roll) {
+                case 0:
+                    return new Color(85, 13, 140);
+                case 1:
+                    return colors.get(0);
+                case 2:
+                    return colors.get(1);
+                case 3:
+                    return colors.get(2);
+                default:
+                    return colors.get(3);
+            }
+        } else {
+            return getRandomColor();
+        }
+    }
+
+    private Color getRandomColor() {
+       int roll = ThreadLocalRandom.current().nextInt(0, 10);
+        switch (roll) {
+            case 0:
+                return new Color(85, 13, 140);
+            case 1:
+                return Color.BLACK;
+            case 2:
+                return Color.YELLOW;
+            case 3:
+                return Color.GREEN;
+            case 4:
+                return Color.RED;
+            case 5:
+                return Color.CYAN;
+            case 6:
+                return Color.ORANGE;
+            case 7:
+                return Color.GRAY;
+            case 8:
+                return Color.MAGENTA;
+            case 9:
+                return Color.PINK;
+            default:
+                return Color.BLUE;
+        }
     }
 }
