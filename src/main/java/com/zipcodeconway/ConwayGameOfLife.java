@@ -9,10 +9,12 @@ public class ConwayGameOfLife {
 
     private SimpleWindow window;
     private int[][] currentGeneration;
+    private int generationsPerColorScheme;
 
     public ConwayGameOfLife(Integer dimension) {
-        window = new SimpleWindow(dimension, 3);
+        window = new SimpleWindow(dimension, 2);
         currentGeneration = createRandomStart(dimension);
+        generationsPerColorScheme = 5;
      }
 
     public ConwayGameOfLife(Integer dimension, int[][] startmatrix) {
@@ -23,11 +25,12 @@ public class ConwayGameOfLife {
                 currentGeneration[i][k] = startmatrix[i][k];
             }
         }
+        generationsPerColorScheme = 100;
     }
 
     public static void main(String[] args) {
         ConwayGameOfLife sim = new ConwayGameOfLife(100);
-        int[][] endingWorld = sim.simulate(15);
+        int[][] endingWorld = sim.simulate(100000);
     }
 
     // Contains the logic for the starting scenario.
@@ -45,15 +48,21 @@ public class ConwayGameOfLife {
 
     public int[][] simulate(Integer maxGenerations) {
         int[][] nextGeneration = new int[this.currentGeneration.length][this.currentGeneration.length];
-        for (int i = 0; i < maxGenerations; i++) {
+        int colorCheck = 0;
+        for (int i = 0; i <= maxGenerations; i++) {
             for (int row = 0; row < this.currentGeneration.length; row++) {
                 for (int col = 0; col < this.currentGeneration.length; col++) {
                     nextGeneration[row][col] = isAlive(row, col, this.currentGeneration);
                 }
             }
             this.window.display(this.currentGeneration, i + 1);
-            this.window.sleep(125);
+            this.window.sleep(60);
             copyAndZeroOut(nextGeneration, this.currentGeneration);
+            colorCheck++;
+            if (colorCheck >= this.generationsPerColorScheme) {
+                colorCheck = 0;
+                this.window.updateColors(this.window.getColorCount());
+            }
         }
         return this.currentGeneration;
     }

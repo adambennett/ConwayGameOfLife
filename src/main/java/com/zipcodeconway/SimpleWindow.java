@@ -67,7 +67,7 @@ public class SimpleWindow {
 
     }
 
-    private void updateColors(int amt) {
+    public void updateColors(int amt) {
         this.colors.clear();
         while (this.colors.size() < amt) {
             Color toAdd = getRandomColor();
@@ -118,5 +118,13 @@ public class SimpleWindow {
             default:
                 return Color.BLUE;
         }
+    }
+
+    public Integer getColorCount() {
+        return colorCount;
+    }
+
+    public void setColorCount(Integer colorCount) {
+        this.colorCount = colorCount;
     }
 }
