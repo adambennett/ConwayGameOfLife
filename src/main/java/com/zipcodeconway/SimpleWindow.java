@@ -9,9 +9,13 @@ public class SimpleWindow {
     static JPanel panel;
     static JFrame frame;
     private Integer dim = 0;
+    private Integer colorCount = 3;
     ArrayList<Color> colors = new ArrayList<>();
 
     public SimpleWindow(Integer dimension) {
+        this(dimension, 3);
+    }
+    public SimpleWindow(Integer dimension, Integer colorCount) {
         this.dim = dimension * 10;
         panel = new JPanel();
         Dimension dim = new Dimension(this.dim, this.dim);
@@ -22,8 +26,9 @@ public class SimpleWindow {
         Container contentPane = frame.getContentPane();
         contentPane.add(panel);
         frame.setVisible(true);
+        this.colorCount = colorCount;
         colors = new ArrayList<>();
-        while (colors.size() < 4) {
+        while (colors.size() < colorCount) {
             Color toAdd = getRandomColor();
             while (colors.contains(toAdd)) {
                 toAdd = getRandomColor();
@@ -54,7 +59,7 @@ public class SimpleWindow {
                     g.fillRect(i * BOX_DIM, j * BOX_DIM, 10, 10);
                 }
                 if (array[i][j] == 1) {
-                    g.setColor(getDisplayColor());
+                    g.setColor(getDisplayColor(this.colorCount));
                     g.fillRect(i * BOX_DIM, j * BOX_DIM, 10, 10);
                 }
             }
@@ -62,24 +67,29 @@ public class SimpleWindow {
 
     }
 
-    private Color getDisplayColor() {
-        if (colors.size() > 3) {
-            int roll = ThreadLocalRandom.current().nextInt(0, 4);
-            switch (roll) {
-                case 0:
-                    return new Color(85, 13, 140);
-                case 1:
-                    return colors.get(0);
-                case 2:
-                    return colors.get(1);
-                case 3:
-                    return colors.get(2);
-                default:
-                    return colors.get(3);
+    private void updateColors(int amt) {
+        this.colors.clear();
+        while (this.colors.size() < amt) {
+            Color toAdd = getRandomColor();
+            while (this.colors.contains(toAdd)) {
+                toAdd = getRandomColor();
             }
-        } else {
-            return getRandomColor();
+            this.colors.add(toAdd);
         }
+    }
+
+    private Color getDisplayColor(int howMany) {
+        if (howMany > 8) {
+            howMany = 8;
+        }
+        if (howMany > colors.size()) {
+            updateColors(howMany);
+        }
+        int roll = ThreadLocalRandom.current().nextInt(0, howMany);
+        while (colors.size() <= roll) {
+            roll = ThreadLocalRandom.current().nextInt(0, howMany);
+        }
+        return colors.get(roll);
     }
 
     private Color getRandomColor() {

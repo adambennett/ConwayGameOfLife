@@ -9,18 +9,15 @@ public class ConwayGameOfLife {
 
     private SimpleWindow window;
     private int[][] currentGeneration;
-    private int[][] nextGen;
 
     public ConwayGameOfLife(Integer dimension) {
-        window = new SimpleWindow(dimension);
+        window = new SimpleWindow(dimension, 3);
         currentGeneration = createRandomStart(dimension);
-        nextGen = new int[0][0];
      }
 
     public ConwayGameOfLife(Integer dimension, int[][] startmatrix) {
         window = new SimpleWindow(dimension);
         currentGeneration = new int[dimension][dimension];
-        nextGen = new int[0][0];
         for (int i = 0; i < startmatrix.length; i++) {
             for (int k = 0; k < startmatrix.length; k++) {
                 currentGeneration[i][k] = startmatrix[i][k];
@@ -30,7 +27,7 @@ public class ConwayGameOfLife {
 
     public static void main(String[] args) {
         ConwayGameOfLife sim = new ConwayGameOfLife(100);
-        int[][] endingWorld = sim.simulate(100);
+        int[][] endingWorld = sim.simulate(15);
     }
 
     // Contains the logic for the starting scenario.
@@ -114,13 +111,7 @@ public class ConwayGameOfLife {
             }
         }
 
-        if (world[row][col] == 1 && neighbors > 1 && neighbors < 4) {
-            return 1;
-        } else if (world[row][col] == 0 && neighbors == 3) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return (world[row][col] == 1 && neighbors > 1 && neighbors < 4) ? 1 : (world[row][col] == 0 && neighbors == 3) ? 1 : 0;
     }
 
 
